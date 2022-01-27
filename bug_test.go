@@ -3,6 +3,7 @@ package bug
 import (
 	"context"
 	"fmt"
+	"log"
 	"net"
 	"strconv"
 	"testing"
@@ -56,9 +57,9 @@ func TestBugMaria(t *testing.T) {
 
 func test(t *testing.T, client *ent.Client) {
 	ctx := context.Background()
-	client.User.Delete().ExecX(ctx)
-	client.User.Create().SetName("Ariel").SetAge(30).ExecX(ctx)
-	if n := client.User.Query().CountX(ctx); n != 1 {
-		t.Errorf("unexpected number of users: %d", n)
+	c, err := client.User.Query().Count(ctx)
+	if err != nil {
+		t.Error(err)
 	}
+	log.Println("count", c)
 }
